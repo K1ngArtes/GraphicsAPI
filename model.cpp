@@ -37,10 +37,6 @@ Model::Model(const char *fileName) : vertices_(), faces_()
                     idx--; // in wavefront obj all indices start at 1, not zero
                     f.push_back(idx);
                 }
-                // std::cout << "f is ";
-                // for(int i = 0; i < 3; i++)
-                //     std::cout << f[i] << " ";
-                // std::cout << std::endl;
                 faces_.push_back(f);
             }
         }

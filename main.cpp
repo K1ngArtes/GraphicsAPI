@@ -15,8 +15,6 @@ int main(int argc, char** argv) {
 	// line(13, 20, 80, 40, image, white);
 	// line(13, 20, 80, 0, image, white);  
 	// line(20, 13, 40, 80, image, red); 
-	// image.flip_vertically(); // i want to have the origin at the left bottom corner of the image
-	// image.write_tga_file("output.tga");
 	line(339, 353, 343, 300, image, red);
 	Model model("obj/african_head.obj");
 	for(int i = 0; i < model.nfaces(); i++) {
@@ -31,7 +29,7 @@ int main(int argc, char** argv) {
 			line(x0, y0, x1, y1, image, white);
 		}
 	}
-	// image.flip_vertically(); // i want to have the origin at the left bottom corner of the image
+	image.flip_vertically(); // i want to have the origin at the left bottom corner of the image
 	image.write_tga_file("output.tga");
 	return 0;
 }
