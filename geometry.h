@@ -46,7 +46,7 @@ template <class T> struct Vec2
 
   public:
     Vec2() : x(0), y(0) {}
-    Vec2(T _x, T _y, T _z) : x(_x), y(_y) {}
+    Vec2(T _x, T _y) : x(_x), y(_y) {}
 
     inline Vec2 operator+(const Vec2 &v) const { return Vec2<T>(x + v.x, y + v.y); }
     inline Vec2 operator-(const Vec2 &v) const { return Vec2<T>(x - v.x, y - v.y); }
