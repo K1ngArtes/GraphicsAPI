@@ -31,6 +31,10 @@ template <class T> struct Vec3
         *this = (*this) * (l / norm());
         return *this;
     }
+
+    Vec3<T> cross(const Vec3<T> &v2) {
+        return Vec3<T>(y*v2.z-z*v2.y, z*v2.x-x*v2.z, x*v2.y-y*v2.x);
+    }
 };
 
 
