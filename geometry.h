@@ -20,7 +20,7 @@ template <class T> struct Vec3
 
     inline Vec3 operator+(const Vec3 &v) const { return Vec3<T>(x + v.x, y + v.y, z + v.z); }
     inline Vec3 operator-(const Vec3 &v) const { return Vec3<T>(x - v.x, y - v.y, z - v.z); }
-    inline Vec3 operator*(const Vec3 &v) const { return Vec3<T>(x * v.x, y * v.y, z * v.z); }
+    inline T    operator*(const Vec3 &v) const { return (x * v.x + y * v.y + z * v.z); }
     inline Vec3 operator*(float f) const { return Vec3<T>(x * f, y * f, z * f); }
     inline Vec3 operator/(const Vec3 &v) const { return Vec3<T>(x / v.x, y / v.y, z / v.z); }
     inline Vec3 operator^(const Vec3 &v) const { return Vec3<T>(y * v.z - z * v.y, z * v.x - x * v.z, x * v.y - y * v.x); }
