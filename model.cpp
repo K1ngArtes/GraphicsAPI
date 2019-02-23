@@ -48,7 +48,6 @@ Model::Model(const char *fileName) : vertices_(), faces_()
 
 Model::~Model()
 {
-    std::cout << "I am failing here" << std::endl;
     if (!faces_.empty())
         faces_.pop_back();
 }

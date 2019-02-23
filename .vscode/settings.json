@@ -53,5 +53,6 @@
         "__split_buffer": "cpp",
         "cmath": "cpp",
         "vector": "cpp"
-    }
+    },
+    "cquery.cacheDirectory": "${workspaceFolder}/.vscode/cquery_cached_index/"
 }
