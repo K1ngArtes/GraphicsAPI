@@ -17,6 +17,7 @@ void line(int x0, int y0, int x1, int y1, TGAImage &image, TGAColor color);
 void line(Vec2i p0, Vec2i p1, TGAImage &image, TGAColor color);
 void triangle(Vec2i t0, Vec2i t1, Vec2i t2, TGAImage &image, TGAColor color);
 void triangle(Vec2i *pts, TGAImage &image, TGAColor color);
+void rasterize(Vec2i p0, Vec2i p1, TGAImage &image, TGAColor color, int yBuffer[]);
 
 int main(int argc, char **argv) {
     TGAImage scene(width, height, TGAImage::RGB);
@@ -32,7 +33,42 @@ int main(int argc, char **argv) {
     scene.flip_vertically();  // i want to have the origin at the left bottom corner of the scene
     scene.write_tga_file("scene.tga");
 
+    TGAImage render(width, 16, TGAImage::RGB);
+    int yBuffer[width];
+
+    //setup buffer with initial values
+    for (int i = 0; i < width; i++) {
+        yBuffer[i] = std::numeric_limits<int>::min();
+    }
+    rasterize(Vec2i(20, 34), Vec2i(744, 400), render, red, yBuffer);
+    rasterize(Vec2i(120, 434), Vec2i(444, 400), render, green, yBuffer);
+    rasterize(Vec2i(330, 463), Vec2i(594, 200), render, blue, yBuffer);
+
+    // 1-pixel wide image is bad for eyes, lets widen it
+    for (int i = 0; i < width; i++) {
+        for (int j = 1; j < 16; j++) {
+            render.set(i, j, render.get(i, 0));
+        }
+    }
+    
+    render.flip_vertically();
+    render.write_tga_file("render.tga");
+
     return 0;
+}
+
+void rasterize(Vec2i p0, Vec2i p1, TGAImage &image, TGAColor color, int yBuffer[]) {
+    if (p0.x > p1.x) {
+        std::swap(p0, p1);
+    }
+    for (int x = p0.x; x <= p1.x; x++) {
+        float t = (x - p0.x) / (float)(p1.x - p0.x);
+        int y = p0.y + t * (p1.y - p0.y);
+        if (yBuffer[x] < y) {
+            yBuffer[x] = y;
+            image.set(x, 0, color);
+        }
+    }
 }
 
 void line(Vec2i p0, Vec2i p1, TGAImage &image, TGAColor color) {
