@@ -37,6 +37,17 @@ Model::Model(const char *fileName) : vertices_(), faces_()
                     f.push_back(idx);
                 }
                 faces_.push_back(f);
+            } else if (!line.compare(0, 4, "vt  ")) {
+                std::vector<float> vt;
+                float vt1, vt2, vt3;
+                std::string trash;
+                iss >> trash;
+                while (iss >> vt1 >> vt2 >> vt3) {
+                    vt.push_back(vt1);
+                    vt.push_back(vt2);
+                    vt.push_back(vt3);
+                }
+                
             }
         }
         std::cerr << "# v# " << vertices_.size() << " f# " << faces_.size() << std::endl;
