@@ -10,7 +10,6 @@ Model::Model(const char *fileName) : vertices_(), faces_()
     std::ifstream objFile(fileName);
     if (objFile.is_open())
     {
-        std::cout << "File is opened!" << std::endl;
         std::string line;
         while (!objFile.eof())
         {
