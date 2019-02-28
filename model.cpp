@@ -31,23 +31,22 @@ Model::Model(const char *fileName) : vertices_(), faces_()
                 std::vector<int> f;
                 int itrash, idx;
                 iss >> trash;
-                while (iss >> idx >> trash >> itrash >> trash >> itrash)
-                {
-                    idx--; // in wavefront obj all indices start at 1, not zero
+                while (iss >> idx >> trash >> itrash >> trash >> itrash) {
+                    idx--;  // in wavefront obj all indices start at 1, not zero
                     f.push_back(idx);
                 }
                 faces_.push_back(f);
             } else if (!line.compare(0, 4, "vt  ")) {
-                std::vector<float> vt;
+                Vec3f vt;
                 float vt1, vt2, vt3;
                 std::string trash;
                 iss >> trash;
                 while (iss >> vt1 >> vt2 >> vt3) {
-                    vt.push_back(vt1);
-                    vt.push_back(vt2);
-                    vt.push_back(vt3);
+                    vt.x = vt1;
+                    vt.y = vt2;
+                    vt.z = vt3;
                 }
-                
+                uv_.push_back(vt);
             }
         }
         std::cerr << "# v# " << vertices_.size() << " f# " << faces_.size() << std::endl;
@@ -56,8 +55,7 @@ Model::Model(const char *fileName) : vertices_(), faces_()
     }
 }
 
-Model::~Model()
-{
+Model::~Model() {
     if (!faces_.empty())
         faces_.pop_back();
 }
@@ -72,6 +70,10 @@ int Model::nfaces() {
 
 Vec3f Model::vertex(int i) {
     return vertices_[i];
+}
+
+Vec3f Model::uv(int i) {
+    return uv_[i];
 }
 
 std::vector<int> Model::face(int i) {

@@ -11,10 +11,12 @@ class Model {
         int nverts();
         int nfaces();
         Vec3f vertex(int i);
+        Vec3f uv(int i);
         std::vector<int> face(int i);
     private:
         std::vector<Vec3f > vertices_;
         std::vector<Vec3f > vertexTexture_;
+        std::vector<Vec3f > uv_;
         std::vector<std::vector<int> > faces_;
 };
 
