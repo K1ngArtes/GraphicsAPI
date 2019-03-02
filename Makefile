@@ -3,7 +3,7 @@ CPPFLAGS     =
 LDFLAGS      =
 LIBS         = -lm
 
-DESTDIR = ./
+DESTDIR = ./bin/
 TARGET  = main
 
 OBJECTS := $(patsubst %.cpp,%.o,$(wildcard *.cpp))
