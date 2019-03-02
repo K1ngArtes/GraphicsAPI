@@ -79,6 +79,10 @@ Vec3f Model::uv(int i) {
     return uv_[i];
 }
 
+std::vector<int> Model::uvs(int i) {
+    return uvs_[i];
+}
+ 
 std::vector<int> Model::face(int i) {
     return faces_[i];
 }

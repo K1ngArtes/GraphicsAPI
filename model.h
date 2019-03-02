@@ -13,6 +13,7 @@ class Model {
         Vec3f vertex(int i);
         Vec3f uv(int i);
         std::vector<int> face(int i);
+        std::vector<int> uvs(int i);
     private:
         std::vector<Vec3f > vertices_;
         std::vector<Vec3f > vertexTexture_;
