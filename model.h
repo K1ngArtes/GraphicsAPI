@@ -18,6 +18,7 @@ class Model {
         std::vector<Vec3f > vertexTexture_;
         std::vector<Vec3f > uv_;
         std::vector<std::vector<int> > faces_;
+        std::vector<std::vector<int> > uvs_;
 };
 
 #endif

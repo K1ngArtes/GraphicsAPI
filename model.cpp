@@ -29,13 +29,16 @@ Model::Model(const char *fileName) : vertices_(), faces_()
                 vertices_.push_back(v);
             } else if (!line.compare(0, 2, "f ")) {
                 std::vector<int> f;
-                int itrash, idx;
+                std::vector<int> uvPos;
+                int itrash, idx, uv;
                 iss >> trash;
-                while (iss >> idx >> trash >> itrash >> trash >> itrash) {
+                while (iss >> idx >> trash >> uv >> trash >> itrash) {
                     idx--;  // in wavefront obj all indices start at 1, not zero
                     f.push_back(idx);
+                    uvPos.push_back(uv);
                 }
                 faces_.push_back(f);
+                uvs_.push_back(uvPos);
             } else if (!line.compare(0, 4, "vt  ")) {
                 Vec3f vt;
                 float vt1, vt2, vt3;

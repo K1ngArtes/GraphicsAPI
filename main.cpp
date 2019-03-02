@@ -25,6 +25,8 @@ int main(int argc, char **argv) {
     }
     
     TGAImage image(width, height, TGAImage::RGB);
+    TGAImage texture;
+    texture.read_tga_file("texture/african_head_diffuse.tga");
     Model model("obj/african_head.obj");
 
     for (int i = 0; i < model.nfaces(); i++) {
