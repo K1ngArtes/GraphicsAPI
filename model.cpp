@@ -52,8 +52,9 @@ Model::Model(const char *fileName) : vertices_(), faces_()
                 uv_.push_back(vt);
             }
         }
-        std::cerr << "# v# " << vertices_.size() << " f# " << faces_.size() << std::endl;
+        std::cerr << "# v# " << vertices_.size() << " f# " << faces_.size() << " vt# " << uv_.size() << std::endl;
         std::cout << "Finished reading the file" << std::endl;
+        loadTexture(fileName, "_diffuse.tga", diffusemap_);
         objFile.close();
     }
 }
@@ -75,8 +76,9 @@ Vec3f Model::vertex(int i) {
     return vertices_[i];
 }
 
-Vec3f Model::uv(int i) {
-    return uv_[i];
+Vec2i Model::uv(int iface, int nvert) {
+    int idx = faces_[iface][nvert];
+    return Vec2i(uv_[idx].x * diffusemap_.get_width(), uv_[idx].y * diffusemap_.get_height());
 }
 
 std::vector<int> Model::uvs(int i) {
@@ -85,4 +87,19 @@ std::vector<int> Model::uvs(int i) {
  
 std::vector<int> Model::face(int i) {
     return faces_[i];
+}
+
+void Model::loadTexture(std::string filename, const char *suffix, TGAImage &img) {
+    std::string textureFile(filename);
+    size_t dot = textureFile.find_last_of(".");
+    size_t slash = textureFile.find_last_of("/");
+    if (dot != std::string::npos) {
+        textureFile = "texture/" + textureFile.substr(slash+1, dot-slash-1) + std::string(suffix);
+        std::cerr << "Texture file " << textureFile << " loading " << (img.read_tga_file(textureFile.c_str()) ? "ok" : "failed") << std::endl;
+        img.flip_vertically();
+    }
+}
+
+TGAColor Model::diffuse(Vec2i uv) {
+    return diffusemap_.get(uv.x, uv.y);
 }
