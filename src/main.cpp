@@ -34,9 +34,9 @@ int main(int argc, char **argv) {
     for (int i = 0; i < model->nfaces(); i++) {
         Vec3i screenCoords[3];
         Vec3f worldCoord[3];
-        std::vector<int> face = model->face(i);
+        std::vector<Vec3i> face = model->face(i);
         for (int i = 0; i < 3; i++) {
-            worldCoord[i] = model->vertex(face[i]);
+            worldCoord[i] = model->vertex(face[i][0]);
             screenCoords[i] = world2Screen(worldCoord[i]);
         }
         // calculate light intensity
@@ -56,6 +56,7 @@ int main(int argc, char **argv) {
         TGAImage zbimage(width, height, TGAImage::GRAYSCALE);
         for (int i=0; i<width; i++) {
             for (int j=0; j<height; j++) {
+//                std::cout << "zBuffer value is: " << zBuffer[i+j*width] << std::endl;
                 zbimage.set(i, j, TGAColor(zBuffer[i+j*width], 1));
             }
         }
@@ -129,6 +130,7 @@ void triangle(Vec3f *pts, float *zBuffer, TGAImage &image, TGAColor color) {
             P.z = 0;
             for (int i=0; i<3; i++) P.z += pts[i].raw[2]*bc_screen.raw[i];
             if (zBuffer[int(P.x + P.y * width)] < P.z) {
+                std::cout << "Inserting " << P.z << std::endl;
                 zBuffer[int(P.x + P.y * width)] = P.z;
                 image.set(P.x, P.y, color);
             }
@@ -153,47 +155,12 @@ void triangle(Vec3i t0, Vec3i t1, Vec3i t2, Vec2i uv0, Vec2i uv1, Vec2i uv2, TGA
     Vec3i t0t1 = t1 - t0;
     Vec3i t1t2 = t2 - t1;
 
-    Vec2i uv0uv2 = uv2 - uv0;
-    Vec2i uv0uv1 = uv1 - uv0;
-    Vec2i uv1uv2 = uv2 - uv1;
-
-    // seg fault cause of segment height being 0
-    // for (int i = 0; i < totalHeight; i++) {
-    //     bool secondHalf = i > firstHalfSize;
-    //     int segmentHeight = secondHalf ? secondHalfSize : firstHalfSize;
-    //     if(segmentHeight <= 0) segmentHeight=1;
-    //     float alpha = (float)i / totalHeight;
-    //     float beta = (float)(i - (secondHalf ? firstHalfSize : 0)) / segmentHeight;
-    //     Vec3i A =              t0 + t0t2 * alpha;
-    //     Vec3i B = secondHalf ? t1 + t1t2 * beta : t0 + t0t1 * beta;
-    //     std::cout << "Segment height: " << segmentHeight << std::endl;
-    //     std::cout << "Alpha: " << alpha << ", Beta: " << beta << std::endl;
-    //     std::cout << "Points are " << t0 << t1 << t2 << std::endl;
-    //     std::cout << "A.x: " << A.x << ", B.x: " << B.x << std::endl;
-    //     Vec2i uvA =              uv0 + uv0uv2 * alpha;
-    //     Vec2i uvB = secondHalf ? uv1 + uv1uv2 * beta : uv0 + uv0uv1 * beta;
-    //     if (A.x > B.x) { std::swap(A, B); std::swap(uvA, uvB); }
-    //     for (int x = A.x; x <= B.x; x++) {
-    //         // phi represents the ration moved on x-axis
-    //         float phi = (x == B.x) ? 1.0 : (x - A.x) / (B.x - A.x);
-    //         Vec3i P = A + (B - A) * phi;
-    //         Vec2i uvP = uvA + (uvB - uvA) * phi;
-    //         int idx = P.x + P.y * width;
-    //         if(zBuffer[idx] < P.z) {
-    //             zBuffer[idx] = P.z;
-    //             TGAColor c = model->diffuse(uvP);
-    //             image.set(P.x, P.y, TGAColor(c.r * intensity, c.g * intensity, c.b * intensity, 255));
-    //         }
-    //         // std::cout << "Max value for int is " << std::numeric_limits<int>::max() << std::endl;
-    //     }
-    // }
-
     int total_height = t2.y - t0.y;
     for (int i = 0; i < total_height; i++) {
         bool second_half = i > t1.y - t0.y || t1.y == t0.y;
-        int segment_height = second_half ? t2.y - t1.y : t1.y - t0.y;
+        int segment_height = second_half ? secondHalfSize : firstHalfSize;
         float alpha = (float)i / total_height;
-        float beta = (float)(i - (second_half ? t1.y - t0.y : 0)) / segment_height;  // be careful: with above conditions no division by zero here
+        float beta = (float)(i - (second_half ? firstHalfSize : 0)) / segment_height;  // be careful: with above conditions no division by zero here
         Vec3i A = t0 + t0t2 * alpha;
         Vec3i B = second_half ? t1 + t1t2 * beta : t0 + t0t1 * beta;
         Vec2i uvA = uv0 + (uv2 - uv0) * alpha;
@@ -208,6 +175,7 @@ void triangle(Vec3i t0, Vec3i t1, Vec3i t2, Vec2i uv0, Vec2i uv1, Vec2i uv2, TGA
             Vec2i uvP = uvA + (uvB - uvA) * phi;
             int idx = P.x + P.y * width;
             if (zBuffer[idx] < P.z) {
+//                std::cout << "Inserting " << P.z << std::endl;
                 zBuffer[idx] = P.z;
                 TGAColor color = model->diffuse(uvP);
                 image.set(P.x, P.y, TGAColor(color.r * intensity, color.g * intensity, color.b * intensity, 255));

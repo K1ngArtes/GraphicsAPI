@@ -28,17 +28,14 @@ Model::Model(const char *fileName) : vertices_(), faces_()
                 }
                 vertices_.push_back(v);
             } else if (!line.compare(0, 2, "f ")) {
-                std::vector<int> f;
-                std::vector<int> uvPos;
-                int itrash, idx, uv;
+                std::vector<Vec3i> f;
+                Vec3i tmp;
                 iss >> trash;
-                while (iss >> idx >> trash >> uv >> trash >> itrash) {
-                    idx--;  // in wavefront obj all indices start at 1, not zero
-                    f.push_back(idx);
-                    uvPos.push_back(uv);
+                while (iss >> tmp[0] >> trash >> tmp[1] >> trash >> tmp[2]) {
+                    for (int i=0; i<3; i++) tmp[i]--; // in wavefront obj all indices start at 1, not zero
+                    f.push_back(tmp);
                 }
                 faces_.push_back(f);
-                faceUVIndeces_.push_back(uvPos);
             } else if (!line.compare(0, 4, "vt  ")) {
                 Vec3f vt;
                 float u, v, w;
@@ -50,7 +47,6 @@ Model::Model(const char *fileName) : vertices_(), faces_()
                     vt.z = w;
                 }
                 uvs_.push_back(vt);
-//                std::cout << "UV: " << vt << std::endl;
             }
         }
         std::cerr << "# v# " << vertices_.size() << " f# " << faces_.size() << " vt# " << uvs_.size() << std::endl;
@@ -78,15 +74,11 @@ Vec3f Model::vertex(int i) {
 }
 
 Vec2i Model::textureCoord(int iface, int nvert) {
-    int texId = faceUVIndeces_[iface][nvert];
+    int texId = faces_[iface][nvert][1];
     return Vec2i(uvs_[texId].x * diffusemap_.get_width(), uvs_[texId].y * diffusemap_.get_height());
 }
 
-Vec3f Model::getFaceUV(int i) {
-    return uvs_[i];
-}
- 
-std::vector<int> Model::face(int i) {
+std::vector<Vec3i> Model::face(int i) {
     return faces_[i];
 }
 
