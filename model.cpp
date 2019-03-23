@@ -38,21 +38,22 @@ Model::Model(const char *fileName) : vertices_(), faces_()
                     uvPos.push_back(uv);
                 }
                 faces_.push_back(f);
-                uvs_.push_back(uvPos);
+                faceUVIndeces_.push_back(uvPos);
             } else if (!line.compare(0, 4, "vt  ")) {
                 Vec3f vt;
-                float vt1, vt2, vt3;
+                float u, v, w;
                 std::string trash;
                 iss >> trash;
-                while (iss >> vt1 >> vt2 >> vt3) {
-                    vt.x = vt1;
-                    vt.y = vt2;
-                    vt.z = vt3;
+                while (iss >> u >> v >> w) {
+                    vt.x = u;
+                    vt.y = v;
+                    vt.z = w;
                 }
-                uv_.push_back(vt);
+                uvs_.push_back(vt);
+                // std::cout << "UV: " << vt << std::cout;
             }
         }
-        std::cerr << "# v# " << vertices_.size() << " f# " << faces_.size() << " vt# " << uv_.size() << std::endl;
+        std::cerr << "# v# " << vertices_.size() << " f# " << faces_.size() << " vt# " << uvs_.size() << std::endl;
         std::cout << "Finished reading the file" << std::endl;
         loadTexture(fileName, "_diffuse.tga", diffusemap_);
         objFile.close();
@@ -76,12 +77,12 @@ Vec3f Model::vertex(int i) {
     return vertices_[i];
 }
 
-Vec2i Model::uv(int iface, int nvert) {
-    int idx = faces_[iface][nvert];
-    return Vec2i(uv_[idx].x * diffusemap_.get_width(), uv_[idx].y * diffusemap_.get_height());
+Vec2i Model::textureCoord(int iface, int nvert) {
+    int texId = faceUVIndeces_[iface][nvert];
+    return Vec2i(uvs_[texId].x * diffusemap_.get_width(), uvs_[texId].y * diffusemap_.get_height());
 }
 
-std::vector<int> Model::uvs(int i) {
+Vec3f Model::getFaceUV(int i) {
     return uvs_[i];
 }
  
