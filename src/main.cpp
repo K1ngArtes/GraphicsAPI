@@ -29,18 +29,18 @@ int main(int argc, char **argv) {
     }
     
     TGAImage image(width, height, TGAImage::RGB);
-    model = new Model("obj/african_head.obj");
+    model = new Model("../obj/african_head.obj");
 
     for (int i = 0; i < model->nfaces(); i++) {
         Vec3i screenCoords[3];
-        Vec3f woorldCoord[3];
+        Vec3f worldCoord[3];
         std::vector<int> face = model->face(i);
         for (int i = 0; i < 3; i++) {
-            woorldCoord[i] = model->vertex(face[i]);
-            screenCoords[i] = world2Screen(woorldCoord[i]);
+            worldCoord[i] = model->vertex(face[i]);
+            screenCoords[i] = world2Screen(worldCoord[i]);
         }
         // calculate light intensity
-        Vec3f orthogonal = (woorldCoord[2]-woorldCoord[0]) ^ (woorldCoord[1]-woorldCoord[0]);
+        Vec3f orthogonal = (worldCoord[2]-worldCoord[0]) ^ (worldCoord[1]-worldCoord[0]);
         orthogonal.normalize();
         float intensity = orthogonal*lightdir;
         Vec2i uv[3];
@@ -49,9 +49,6 @@ int main(int argc, char **argv) {
         if(intensity > 0)
             triangle(screenCoords[0], screenCoords[1], screenCoords[2], uv[0], uv[1], uv[2], image, zBuffer, intensity);
     }
-    std::cout << "bruh" << std::endl;
-
-    std::cout << "what now?" << std::endl;
     image.flip_vertically();
     image.write_tga_file("output.tga");
 

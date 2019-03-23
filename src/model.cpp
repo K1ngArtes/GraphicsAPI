@@ -50,7 +50,7 @@ Model::Model(const char *fileName) : vertices_(), faces_()
                     vt.z = w;
                 }
                 uvs_.push_back(vt);
-                // std::cout << "UV: " << vt << std::cout;
+//                std::cout << "UV: " << vt << std::endl;
             }
         }
         std::cerr << "# v# " << vertices_.size() << " f# " << faces_.size() << " vt# " << uvs_.size() << std::endl;
@@ -95,7 +95,7 @@ void Model::loadTexture(std::string filename, const char *suffix, TGAImage &img)
     size_t dot = textureFile.find_last_of(".");
     size_t slash = textureFile.find_last_of("/");
     if (dot != std::string::npos) {
-        textureFile = "texture/" + textureFile.substr(slash+1, dot-slash-1) + std::string(suffix);
+        textureFile = "/Users/Arthur/CLionProjects/GraphicsAPI/texture/" + textureFile.substr(slash+1, dot-slash-1) + std::string(suffix);
         std::cerr << "Texture file " << textureFile << " loading " << (img.read_tga_file(textureFile.c_str()) ? "ok" : "failed") << std::endl;
         img.flip_vertically();
     }
