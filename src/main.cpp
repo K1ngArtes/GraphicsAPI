@@ -173,6 +173,8 @@ void triangle(Vec3i t0, Vec3i t1, Vec3i t2, Vec2i uv0, Vec2i uv1, Vec2i uv2, TGA
         for (int j = A.x; j <= B.x; j++) {
             float phi = B.x == A.x ? 1. : (float)(j - A.x) / (float)(B.x - A.x);
             Vec3i P = (A) + (B - A) * phi;
+            P.x = j;
+            P.y = t0.y + i;
             Vec2i uvP = uvA + (uvB - uvA) * phi;
             int idx = P.x + P.y * width;
             if (zBuffer[idx] < P.z) {
