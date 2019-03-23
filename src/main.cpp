@@ -11,6 +11,7 @@ const TGAColor green = TGAColor(0, 255, 0, 255);
 const TGAColor blue = TGAColor(0, 0, 255, 255);
 const int width = 800;
 const int height = 800;
+const int depth = 255;
 Vec3f lightdir(0, 0, -1);
 
 void line(Vec2i p0, Vec2i p1, TGAImage &image, TGAColor color);
@@ -188,5 +189,5 @@ Vec3i world2Screen(const Vec3f &P) {
     return Vec3i(
         int((P.x + 1) * width/2.0 + 0.5),
         int((P.y + 1) * height/2.0 + 0.5),
-        P.z);
+        int((P.z + 1) * depth/2.0 + 0.5));
 }
