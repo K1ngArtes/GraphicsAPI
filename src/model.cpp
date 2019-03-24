@@ -87,7 +87,7 @@ void Model::loadTexture(std::string filename, const char *suffix, TGAImage &img)
     size_t dot = textureFile.find_last_of(".");
     size_t slash = textureFile.find_last_of("/");
     if (dot != std::string::npos) {
-        textureFile = "/Users/Arthur/CLionProjects/GraphicsAPI/texture/" + textureFile.substr(slash+1, dot-slash-1) + std::string(suffix);
+        textureFile = "../texture/" + textureFile.substr(slash+1, dot-slash-1) + std::string(suffix);
         std::cerr << "Texture file " << textureFile << " loading " << (img.read_tga_file(textureFile.c_str()) ? "ok" : "failed") << std::endl;
         img.flip_vertically();
     }

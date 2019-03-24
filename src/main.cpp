@@ -57,7 +57,6 @@ int main(int argc, char **argv) {
         TGAImage zbimage(width, height, TGAImage::GRAYSCALE);
         for (int i=0; i<width; i++) {
             for (int j=0; j<height; j++) {
-//                std::cout << "zBuffer value is: " << zBuffer[i+j*width] << std::endl;
                 zbimage.set(i, j, TGAColor(zBuffer[i+j*width], 1));
             }
         }
@@ -178,7 +177,6 @@ void triangle(Vec3i t0, Vec3i t1, Vec3i t2, Vec2i uv0, Vec2i uv1, Vec2i uv2, TGA
             Vec2i uvP = uvA + (uvB - uvA) * phi;
             int idx = P.x + P.y * width;
             if (zBuffer[idx] < P.z) {
-//                std::cout << "Inserting " << P.z << std::endl;
                 zBuffer[idx] = P.z;
                 TGAColor color = model->diffuse(uvP);
                 image.set(P.x, P.y, TGAColor(color.r * intensity, color.g * intensity, color.b * intensity, 255));
