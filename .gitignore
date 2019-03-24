@@ -1,5 +1,4 @@
 *.o
-*.tga
 
 # Binary files
 ./bin
